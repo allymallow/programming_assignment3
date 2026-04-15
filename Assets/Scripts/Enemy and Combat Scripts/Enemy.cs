@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,6 +12,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float giveUpDistance;
     [SerializeField] private float chaseCheckAngle;
     [SerializeField] private Animator enemyAnim;
+    [SerializeField] public int damage;
     
     private EnemyState _currentState;
     private Transform _currentTarget;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public static event Action<int> EnemyDestroyed; // event to allow GameManager to increment score
-    public int Score = 1; //value to be incremented in GameManager
+    [SerializeField] public int Score; //value to be incremented in GameManager
     
     private Rigidbody _rb;
     void Start()
@@ -15,7 +15,10 @@ public class EnemyController : MonoBehaviour
     
     void OnTriggerEnter(Collider other)
     {
-            OnDestroyed(); // destroy the enemy when hit by trigger object (arrow)
+        if (other.CompareTag("Arrow"))
+        {
+            OnDestroyed(); //Destroy enemy when hit by arrow
+        }
     }
 
     void OnDestroyed()

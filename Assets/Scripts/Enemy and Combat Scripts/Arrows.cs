@@ -2,20 +2,21 @@ using UnityEngine;
 
 public class Arrows : MonoBehaviour
 {
+    [SerializeField] private float arrowLifetime;
     private Rigidbody _rb;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         
-        Invoke(nameof(DestroyAfter), 5f);
+        Invoke(nameof(DestroyAfter), arrowLifetime);
     }
-
-    // Update is called once per frame
+    
     void FixedUpdate()
     {
-        //ensuring arrows shoot in the direction camera and player are facing
-        _rb.rotation = Quaternion.LookRotation(_rb.linearVelocity); 
+        //ensuring arrows shoot in the direction camera and player are facing, but only if the arrow is moving
+        if(_rb.linearVelocity.sqrMagnitude > 0.1f)
+          _rb.rotation = Quaternion.LookRotation(_rb.linearVelocity); 
     }
 
     void DestroyAfter()

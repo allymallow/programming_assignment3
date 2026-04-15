@@ -40,7 +40,7 @@ public class ChestInteractable : MonoBehaviour, IInteractable
         chestLid.DOLocalRotate(chestLidRotation, chestLidDuration).SetEase(ease);
 
         //enable toast text when player close
-        Toast.Instance.ShowToast("Press \"E\" to Interact"); 
+        Toast.Instance?.ShowToast("Press \"E\" to Interact"); 
     }
 
     public void OnHoverOut()
@@ -49,14 +49,14 @@ public class ChestInteractable : MonoBehaviour, IInteractable
       chestLid.DOLocalRotate(Vector3.zero, chestLidDuration).SetEase(ease);
 
         //hide toast text when player moves away
-        Toast.Instance.HideToast(); 
+        Toast.Instance?.HideToast(); 
     }
 
     public void OnInteract()
     {
         //Change scale then destroy chest once interacted with
         _collectTween = transform.DOScale(0, .5f).SetEase(Ease.InBack).OnComplete(() => { Destroy(gameObject); });
-        ChestDestroyed.Invoke(Score);
+        ChestDestroyed?.Invoke(Score);
     }
     
 }

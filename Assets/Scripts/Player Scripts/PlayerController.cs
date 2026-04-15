@@ -4,7 +4,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-   
+    [Header("Player Health")]
+    [SerializeField] private int _health;
+    
     [Header("Player Movement")]
     [SerializeField] private Camera playerCamera;
     [SerializeField] private float moveSpeed = 2;
@@ -27,7 +29,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxAimHeight;
     [SerializeField] private float minAimHeight;
 
-
     public event Action OnJumpEvent;
     public event Action<PlayerState> OnStateUpdated;
     
@@ -47,6 +48,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 _tempAimTrackerPosition;
     
     private PlayerState _currentState;
+
+    public static event Action OnPlayerDied;
+    public static event Action<int> OnHealthChanged; 
     
 
     public bool IsGrounded()
@@ -68,6 +72,8 @@ public class PlayerController : MonoBehaviour
         OnStateUpdated?.Invoke(_currentState);
 
         _defaultAimTrackerPosition = aimTrack.localPosition;
+        
+        OnHealthChanged?.Invoke(_health);
     }
 
     // Update is called once per frame
@@ -112,6 +118,14 @@ public class PlayerController : MonoBehaviour
         {
             _velocity.y = jumpVelocity;
             OnJumpEvent?.Invoke();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent<Enemy>(out Enemy enemy))
+        {
+            TakeDamage(enemy.damage);
         }
     }
 
@@ -186,6 +200,17 @@ public class PlayerController : MonoBehaviour
             groundCheckDistance,
             groundLayer
         );
+    }
+
+    public void TakeDamage(int damage)
+    {
+        _health -= damage;
+        OnHealthChanged?.Invoke(_health);
+        
+        if (_health <= 0)
+        {
+            OnPlayerDied?.Invoke();
+        }
     }
     
     void OnDrawGizmos()

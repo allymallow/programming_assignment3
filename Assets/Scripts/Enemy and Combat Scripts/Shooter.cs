@@ -9,6 +9,9 @@ public class Shooter : MonoBehaviour
     [SerializeField] private GameObject shootObject; // what prefab we are using as a projectile
     [SerializeField] private Transform aimTrack; // allowing me to include the aimtrack in inspector
     [SerializeField] private float shootForce; // how much force to use when shooting
+    [SerializeField] private Camera playerCamera; //getting player camera location for raycast
+    [SerializeField] private float maxAimDistance; //setting the max distance the raycast will check
+    [SerializeField] LayerMask aimCollisionMask;
     
     private GameObject _arrow;
     private Vector3 _shootDirection;
@@ -45,15 +48,24 @@ public class Shooter : MonoBehaviour
     {
         if(_currentState != PlayerState.AIM) return;
 
-        //calculate the direction
-        _shootDirection = aimTrack.position - shootPoint.position;
-        _shootDirection.Normalize();
+        Vector3 aimPoint = FindAimPoint();
+        
+        _shootDirection = (aimPoint - shootPoint.position).normalized;
 
-        //create a new arrow
         _arrow = Instantiate(shootObject, shootPoint.position, Quaternion.LookRotation(_shootDirection));
-
-        // apply a force
         _arrow.GetComponent<Rigidbody>().AddForce(shootForce * _shootDirection);
+    }
+    
+    private Vector3 FindAimPoint()
+    {
+        Ray aimingRay = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+
+        if (Physics.Raycast(aimingRay, out RaycastHit hit, maxAimDistance, aimCollisionMask))
+        {
+            return hit.point;
+        }
+
+        return aimingRay.GetPoint(maxAimDistance);
     }
     
 }

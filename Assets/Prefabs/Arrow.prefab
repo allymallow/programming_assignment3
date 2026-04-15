@@ -53,6 +53,10 @@ PrefabInstance:
       value: Arrow
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a64ad6525da61964482f614a4caee7de, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a64ad6525da61964482f614a4caee7de, type: 3}
       propertyPath: m_TagString
       value: Arrow
       objectReference: {fileID: 0}
@@ -141,3 +145,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab0882b938ca70442aee5c28576f418d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  arrowLifetime: 5

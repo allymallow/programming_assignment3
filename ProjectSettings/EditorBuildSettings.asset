@@ -7,16 +7,19 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/StartScene.unity
-    guid: 89f638225e25f0a43add9ffad174e451
+    guid: 2f311656ff244164ba3d34edb5339d9c
   - enabled: 1
     path: Assets/Scenes/GameScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
-    path: Assets/Scenes/WinScene.unity
-    guid: b4fcd262a7b61c546a817bddd372e7fb
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GameOverScene.unity
     guid: 577f7fee830a5e44c88f629acd78a785
+  - enabled: 1
+    path: Assets/Scenes/LossScene.unity
+    guid: 1230298789cd9944c964b54de4f3b71f
+  - enabled: 1
+    path: Assets/Scenes/WinScene.unity
+    guid: 9a9983dd803d5284ea52ce64f864a045
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
