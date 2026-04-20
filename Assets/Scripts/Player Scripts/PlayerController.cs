@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Player Health")]
-    [SerializeField] private int _health;
+    [SerializeField] private int health;
     
     [Header("Player Movement")]
     [SerializeField] private Camera playerCamera;
@@ -63,6 +63,16 @@ public class PlayerController : MonoBehaviour
         return _velocity;
     }
 
+    void OnEnable()
+    {
+        MeleeEnemyController.CausedDamage += TakeDamage;
+    }
+    
+    void OnDisable()
+    {
+        MeleeEnemyController.CausedDamage -= TakeDamage;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -73,7 +83,7 @@ public class PlayerController : MonoBehaviour
 
         _defaultAimTrackerPosition = aimTrack.localPosition;
         
-        OnHealthChanged?.Invoke(_health);
+        OnHealthChanged?.Invoke(health);
     }
 
     // Update is called once per frame
@@ -100,7 +110,7 @@ public class PlayerController : MonoBehaviour
             _velocity.y = -0.2f;
         }
     }
-
+    
     public void OnMove(InputValue value)
     {
         _moveInput = value.Get<Vector2>();
@@ -123,7 +133,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<Enemy>(out Enemy enemy))
+        //take damage from the melee(slime) enemy when they hit the player
+        if (other.TryGetComponent<MeleeEnemyController>(out MeleeEnemyController enemy))
         {
             TakeDamage(enemy.damage);
         }
@@ -142,8 +153,9 @@ public class PlayerController : MonoBehaviour
             _camForward.y = 0;
             _camForward.Normalize();
             transform.rotation = Quaternion.LookRotation(_camForward);
+
+            OnStateUpdated?.Invoke(_currentState);
         }
-        OnStateUpdated?.Invoke(_currentState);
     }
 
     private void CalculateMovementExplore()
@@ -204,10 +216,10 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        _health -= damage;
-        OnHealthChanged?.Invoke(_health);
+        health -= damage;
+        OnHealthChanged?.Invoke(health);
         
-        if (_health <= 0)
+        if (health <= 0)
         {
             OnPlayerDied?.Invoke();
         }

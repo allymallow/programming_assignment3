@@ -32,7 +32,8 @@ public class GameManager : MonoBehaviour
     {
         pauseInput.Enable();
         pauseInput.performed += Pause;
-        EnemyController.EnemyDestroyed += IncreaseScore;
+        MeleeEnemyController.EnemyDestroyed += IncreaseScore;
+        RangedEnemyController.EnemyDestroyed += IncreaseScore;
         ChestInteractable.ChestDestroyed += IncreaseScore;
         PlayerController.OnPlayerDied += GameOver;
         PlayerController.OnHealthChanged += UpdateHealth; 
@@ -41,7 +42,8 @@ public class GameManager : MonoBehaviour
     void OnDisable()
     {
         pauseInput.performed -= Pause;
-        EnemyController.EnemyDestroyed -= IncreaseScore;
+        MeleeEnemyController.EnemyDestroyed -= IncreaseScore;
+        RangedEnemyController.EnemyDestroyed -= IncreaseScore;
         ChestInteractable.ChestDestroyed -= IncreaseScore;
         PlayerController.OnPlayerDied -= GameOver;
         PlayerController.OnHealthChanged -= UpdateHealth;
@@ -102,17 +104,29 @@ public class GameManager : MonoBehaviour
             //when bool is toggled, so is timescale so the game actually freezes/unfreezes
 
             pauseCanvas.gameObject.SetActive(_isPaused); // setting the pause panel visibility
-            Cursor.lockState = _isPaused ? CursorLockMode.Locked : CursorLockMode.None;
+            //unfreeze the cursor on pause to allow players to use the UI buttons
+            Cursor.lockState = _isPaused ? CursorLockMode.None : CursorLockMode.Locked; 
         }
     }
 
+    //public method to allow the pause screen's resume button to work
+    public void OnResumePressed()
+    {
+        _isPaused = false;
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+        pauseCanvas.gameObject.SetActive(false);
+    }
+
+    //pause the game and switch to the game over/loss screen
     void GameOver()
     {
         _gameEnded = true;
         Time.timeScale = 0;
         SceneManager.LoadScene(lossSceneName);
     }
-
+    
+   //pause and switch to the win screen
     void WinGame()
     {
         _gameEnded = true;

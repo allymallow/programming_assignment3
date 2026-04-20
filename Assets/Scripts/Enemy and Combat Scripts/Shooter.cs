@@ -13,6 +13,10 @@ public class Shooter : MonoBehaviour
     [SerializeField] private float maxAimDistance; //setting the max distance the raycast will check
     [SerializeField] LayerMask aimCollisionMask;
     
+    [Header("Audio Feedback Settings")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip shootClip;
+    
     private GameObject _arrow;
     private Vector3 _shootDirection;
     private PlayerState _currentState;
@@ -47,13 +51,16 @@ public class Shooter : MonoBehaviour
     private void Shoot(InputAction.CallbackContext context)
     {
         if(_currentState != PlayerState.AIM) return;
-
+        
         Vector3 aimPoint = FindAimPoint();
         
         _shootDirection = (aimPoint - shootPoint.position).normalized;
 
         _arrow = Instantiate(shootObject, shootPoint.position, Quaternion.LookRotation(_shootDirection));
         _arrow.GetComponent<Rigidbody>().AddForce(shootForce * _shootDirection);
+        
+        if (audioSource != null && shootClip != null)
+            audioSource.PlayOneShot(shootClip);
     }
     
     private Vector3 FindAimPoint()

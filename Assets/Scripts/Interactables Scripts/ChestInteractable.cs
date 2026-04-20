@@ -13,6 +13,10 @@ public class ChestInteractable : MonoBehaviour, IInteractable
     [SerializeField] private Vector3 chestLidRotation;
     [SerializeField] private float chestLidDuration;
     
+    [Header("Audio Feedback")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip chestClip;
+    
     private Tween _collectTween;
    private Tween _openLidTween;
     private Tween _loopTween;
@@ -54,6 +58,9 @@ public class ChestInteractable : MonoBehaviour, IInteractable
 
     public void OnInteract()
     {
+        if(audioSource != null && chestClip != null)
+            audioSource.PlayOneShot(chestClip);
+            
         //Change scale then destroy chest once interacted with
         _collectTween = transform.DOScale(0, .5f).SetEase(Ease.InBack).OnComplete(() => { Destroy(gameObject); });
         ChestDestroyed?.Invoke(Score);
